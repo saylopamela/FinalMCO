@@ -1,0 +1,32 @@
+#!/bin/bash
+
+echo "########## Logging in MySQL user ##########"
+#MySQL login user name
+MUSER="wordpressuser"
+
+#MySQL login PASSWORD name
+MPASS="kobekobe"
+
+#MYSQL Database name 
+DB="wordpress"
+
+echo "########## Creating Backup Directory ##########"
+#Backup directory
+BAK="/opt/backups"
+
+#mmddyyyy format
+NOW=$(date +"%m%d%Y")
+
+#* MySQL binaries *#
+MYSQL="$(which mysql)"
+MYSQLDUMP="$(which mysqldump)"
+
+if [ ! -d $BAK ]; then
+  mkdir -p $BAK
+else
+ :
+fi
+
+# Export DB and compress
+echo "########## Exporting and Compressing DB ##########"
+$MYSQLDUMP --single-transaction -u $MUSER -p$MPASS $DB | gzip >$BAK/wordpress_$NOW.sql.gz
